@@ -15,6 +15,8 @@
  */
 
 // puppeteer-core should not install anything.
+
+const os = require('os');
 if (require('./package.json').name === 'puppeteer-core')
   return;
 
@@ -69,7 +71,8 @@ browserFetcher.download(revisionInfo.revision, onProgress)
  * @return {!Promise}
  */
 function onSuccess(localRevisions) {
-  logPolitely('Chromium downloaded to ' + revisionInfo.folderPath);
+  if (os.arch() !== 'arm64')
+    logPolitely('Chromium downloaded to ' + revisionInfo.folderPath);
   localRevisions = localRevisions.filter(revision => revision !== revisionInfo.revision);
   // Remove previous chromium revisions.
   const cleanupOldVersions = localRevisions.map(revision => browserFetcher.remove(revision));
